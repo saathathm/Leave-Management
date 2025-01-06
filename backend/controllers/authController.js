@@ -31,3 +31,20 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUser = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    next(error);
+  }
+};
